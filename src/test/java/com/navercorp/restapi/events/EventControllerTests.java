@@ -1,6 +1,7 @@
 package com.navercorp.restapi.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.navercorp.restapi.common.TestDescription;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,7 @@ public class EventControllerTests {
     ObjectMapper objectMapper;
 
     @Test
+    @TestDescription("정상 이벤트 요청")
     public void createEvent() throws Exception {
         EventDto event = EventDto.builder()
                 .name("Spring")
@@ -64,6 +66,7 @@ public class EventControllerTests {
     }
 
     @Test
+    @TestDescription("입력 파라미터를 초과한 경우 에러 발생 테스트")
     public void createEvent_Bad_Request() throws Exception {
         Event event = Event.builder()
                 .id(100)
@@ -91,6 +94,7 @@ public class EventControllerTests {
     }
 
     @Test
+    @TestDescription("입력값이 비어있을 경우 에러 발생 테스트")
     public void createEvent_Bad_Request_Empty_Input() throws Exception {
         EventDto eventDto = EventDto.builder().build();
         this.mockMvc.perform(post("/api/events")
@@ -100,6 +104,7 @@ public class EventControllerTests {
     }
 
     @Test
+    @TestDescription("입력값이 올바르지 않을 경우 에러 발생 테스트")
     public void createEvent_Bad_Request_Wrong_Input() throws Exception {
         EventDto eventDto = EventDto.builder()
                 .name("Spring")
