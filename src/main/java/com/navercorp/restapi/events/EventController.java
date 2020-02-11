@@ -43,6 +43,7 @@ public class EventController {
 
         // EventDto to Event
         Event event = this.modelMapper.map(eventDto, Event.class);
+        event.update(); // 비즈니스 로직이니 Service Layer로 넘길 수도 있음.
 
         Event newEvent = this.eventRepository.save(event);
         URI createdUri = linkTo(EventController.class).slash(newEvent.getId()).toUri();
