@@ -2,11 +2,15 @@ package com.navercorp.restapi.events;
 
 import com.navercorp.restapi.common.ErrorsResource;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +60,17 @@ public class EventController {
         eventResource.add(linkTo(EventController.class).withRel("query-events"));
         eventResource.add(selfLinkBuilder.withRel("update-event"));
         return ResponseEntity.created(createdUri).body(eventResource);
+    }
+
+    @GetMapping
+    public ResponseEntity queryEvents(Pageable pageable, PagedResourcesAssembler<Event> assembler) {
+        // Add links of pages
+        Page<Event> page = this.eventRepository.findAll(pageable);
+        // Return with link of each Event
+        var pagedResources = assembler.toModel(page, e -> new EventResource(e));
+        // TODO: Add Docs
+//        pagedResources.add(linkTo())
+        return ResponseEntity.ok(pagedResources);
     }
 
     private ResponseEntity badRequest(Errors errors) {
